@@ -95,19 +95,28 @@ const resources = [
     },
 ]
 
-
+//henter nav-tabs fra index filen slikt at vi kan starte med og få innholdet dynamisk
 const navfaner = document.getElementById("nav-tabs")
+
+//henter content fra index filen slikt at vi kan starte med og få innholdet dynamisk
 const content = document.getElementById("content")
 
+//her så har vi en tom streng slikt at html innholdet blir dynamisk
 let resourcesHTML = "";
 
-// Dynamisk generering av navigasjonselementer
-resources.map((resource, index) => 
-    resourcesHTML += `<li data-index="${index}" class="${index === 0 ? "active" : ""}">${resource.category}</li>`)
+//her så henter elementene fra resource arrayet og index til hvert element
+resources.map((resource, index) => {
+    //her så henter vi ut første elementet i resource arrayen våres og setter klassen til active slikt at tabben blir markert som aktiv
+    resourcesHTML += `<li class="${index === 0 ? "active" : ""}">${resource.category}</li>`;
+})
 
+//her så setter vi innholdet i navfaner til resourceHTML
 navfaner.innerHTML = resourcesHTML;
 
-
+// https://chatgpt.com/share/679a5c60-7d2c-8009-8c6f-beedf2dbecbe
+// Her så har jeg spurt chatgpt om hvordan man får fjernet "," som vises etter vær av linkene når jeg har brukt .map (jeg har også brukt .join lengre nede i htmlResource.sources.map)
+//om jeg har forstått riktig så gjør .join slikt at den henter ut linkene i sources og at den da fjerner "," som blir vist når jeg ikke har .join
+//her så har vi en funksjon som oppdaterer innholdet i tabbene ettersom hvilken tab som er valgt
 function updateFaner(index) {
     const resource = resources[index]
     content.innerHTML = `<h2>${resource.category}</h2>
@@ -117,7 +126,7 @@ function updateFaner(index) {
     </ul>`
 };
 
-// Bruk filter() og map() for å vise HTML-kategori innhold ved siden lasting
+//her så henter vi ut dataen fra html i arrayet også vises dem som startinnholdet når man åpner siden / refresher
 const htmlResource = resources.filter(resource => resource.category === "HTML")[0];
 content.innerHTML = `<h2>${htmlResource.category}</h2>
     <p>${htmlResource.text}</p>
@@ -125,26 +134,23 @@ content.innerHTML = `<h2>${htmlResource.category}</h2>
         ${htmlResource.sources.map(source => `<li><a href="${source.url}" target="_blank">${source.title}</a></li>`).join("")}
     </ul>`;
 
-// Legg til event listeners på hvert listeelement (uten å bruke forEach eller querySelectorAll)
-const tabs = navfaner.getElementsByTagName('li');  // Hent alle li-elementene
-for (let tab of tabs) {
-    tab.addEventListener("click", (event) => {
-        const li = event.target;
-        const index = li.dataset.index;
+//henter alle li elementene i navfaner 
+const tabs = navfaner.getElementsByTagName('li'); 
 
-        // Fjern 'active' klasse fra alle tabene
+//her så legger vi til en eventlistener slikt at når vi klikker på en tab så åpnes den vi trykker på
+for (let i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener("click", () => {
+
+        //Fjerner klassen active fra alle tabbene
         for (let tab of tabs) {
             tab.classList.remove("active");
         }
 
-        // Legg til 'active' på den valgte taben
-        li.classList.add("active");
+        //Legger til klassen active på den valgte tabben
+        tabs[i].classList.add("active");
 
-        // Oppdater innholdet basert på valgt kategori
-        updateFaner(index);
+        //oppdaterer innholdet basert på hvilken tab vi har trykket på
+        updateFaner(i);
     });
 }
-
-// Initialiser innhold ved å vise den første kategorien
-updateFaner(0);
 
