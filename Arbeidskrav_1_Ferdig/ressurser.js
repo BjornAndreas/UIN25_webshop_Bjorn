@@ -125,7 +125,7 @@ content.innerHTML = `<h2>${htmlResource.category}</h2>
         ${htmlResource.sources.map(source => `<li><a href="${source.url}" target="_blank">${source.title}</a></li>`).join("")}
     </ul>`;
 
-// Legg til event listeners på hvert listeelement (uten å bruke forEach eller querySelectorAll)
+// Legg til event listeners på hvert listeelement
 const tabs = navfaner.getElementsByTagName('li');  // Hent alle li-elementene
 for (let tab of tabs) {
     tab.addEventListener("click", (event) => {
